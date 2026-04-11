@@ -1,0 +1,136 @@
+<mat-toolbar color="primary" class="toolbar">
+  <mat-icon class="toolbar-icon">local_pharmacy</mat-icon>
+  <span class="toolbar-title">FarmaScope — Comparador de Precios Farmacéuticos</span>
+  <span class="spacer"></span>
+
+  @if (selectedProducts().length > 0) {
+    <button mat-flat-button color="accent" class="guide-btn" (click)="navigateToGuide()">
+      <mat-icon>shopping_cart</mat-icon>
+      Generar Guía ({{ selectedProducts().length }})
+    </button>
+  }
+
+  <button mat-stroked-button [disabled]="refreshing()" (click)="triggerRefresh()">
+    @if (refreshing()) {
+      <mat-spinner diameter="18" class="spinner-inline" />
+    } @else {
+      <mat-icon>refresh</mat-icon>
+    }
+    Actualizar Ahora
+  </button>
+</mat-toolbar>
+
+<div class="container page-content">
+
+  @if (loading()) {
+    <div class="loading-center">
+      <mat-spinner />
+      <p>Cargando reporte de inventario...</p>
+    </div>
+  } @else if (report(); as r) {
+
+    <!-- KPI cards -->
+    <div class="stats-grid">
+      <mat-card class="stat-card stat-warning">
+        <mat-card-content>
+          <mat-icon>warning</mat-icon>
+          <div class="stat-info">
+            <span class="stat-value">{{ r.pagination?.total ?? r.totalLowStockProducts }}</span>
+            <span class="stat-label">Productos bajo mínimo</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card stat-success">
+        <mat-card-content>
+          <mat-icon>check_circle</mat-icon>
+          <div class="stat-info">
+            <span class="stat-value">{{ r.productsWithOffers }}</span>
+            <span class="stat-label">Con mejor oferta encontrada</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card stat-error">
+        <mat-card-content>
+          <mat-icon>block</mat-icon>
+          <div class="stat-info">
+            <span class="stat-value">{{ r.productsWithoutOffers }}</span>
+            <span class="stat-label">Sin disponibilidad</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card stat-info">
+        <mat-card-content>
+          <mat-icon>schedule</mat-icon>
+          <div class="stat-info">
+            <span class="stat-value">{{ r.lastRunAt | date:'dd/MM HH:mm' }}</span>
+            <span class="stat-label">Última actualización</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Search & Sort toolbar -->
+    <div class="filter-bar">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Buscar producto</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          [ngModel]="searchTerm"
+          (ngModelChange)="onSearch($event)"
+          placeholder="Nombre, genérico, código, laboratorio..."
+        />
+        @if (searchTerm) {
+          <button matSuffix mat-icon-button (click)="onSearch('')">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="sort-field">
+        <mat-label>Ordenar por</mat-label>
+        <mat-select [(ngModel)]="sortBy" (ngModelChange)="onSortChange()">
+          <mat-option value="deficit">Mayor déficit (críticos primero)</mat-option>
+          <mat-option value="stock">Menor stock</mat-option>
+          <mat-option value="name">Nombre A-Z</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      @if (searchTerm) {
+        <span class="search-results">
+          {{ r.pagination?.total ?? 0 }} resultado(s) para "{{ searchTerm }}"
+        </span>
+      }
+    </div>
+
+    <app-product-table
+      [reports]="r.reports"
+      [selectedProducts]="selectedProducts()"
+      (productSelectionChange)="onProductSelected($event.selected, $event.report)"
+    />
+
+    <!-- Paginator -->
+    @if (r.pagination && r.pagination.total > pageSize) {
+      <mat-paginator
+        [length]="r.pagination.total"
+        [pageSize]="pageSize"
+        [pageIndex]="currentPage - 1"
+        [pageSizeOptions]="[25, 50, 100]"
+        showFirstLastButtons
+        (page)="onPageChange($event)"
+        class="paginator"
+      />
+    }
+
+  } @else {
+    <mat-card class="empty-state">
+      <mat-card-content>
+        <mat-icon>inventory_2</mat-icon>
+        <p>No hay datos disponibles. Haz clic en "Actualizar Ahora".</p>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

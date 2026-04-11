@@ -1,0 +1,39 @@
+<div class="comparison-container">
+  <h3 class="comparison-title">Comparación de precios por distribuidor</h3>
+
+  <div class="price-grid">
+    @for (price of report().prices; track price.distributorId) {
+      <div class="price-card" [class.best-offer]="isBestOffer(price)" [class.unavailable]="!price.available">
+
+        @if (isBestOffer(price)) {
+          <div class="best-badge">
+            <mat-icon>star</mat-icon> Mejor Precio
+          </div>
+        }
+
+        <div class="distributor-name">{{ price.distributorName }}</div>
+
+        @if (price.available) {
+          <div class="price-main">{{ formatPrice(price.unitPrice) }}</div>
+          <div class="price-sub">por unidad</div>
+          <div class="price-pack">Caja x{{ price.packQuantity }}: {{ formatPrice(price.packPrice) }}</div>
+
+          @if (price.url) {
+            <button mat-stroked-button color="primary" class="visit-btn" (click)="openUrl(price.url)">
+              <mat-icon>open_in_new</mat-icon> Ver en portal
+            </button>
+          }
+        } @else {
+          <div class="unavailable-text">
+            <mat-icon>inventory_2</mat-icon>
+            <span>No disponible</span>
+          </div>
+        }
+
+        <div class="updated-at">
+          Consultado: {{ price.lastUpdated | date:'dd/MM HH:mm' }}
+        </div>
+      </div>
+    }
+  </div>
+</div>

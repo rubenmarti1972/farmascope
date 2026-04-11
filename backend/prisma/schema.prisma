@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model ProductSnapshot {
+  id           String   @id @default(uuid())
+  code         String
+  name         String
+  genericName  String
+  laboratory   String
+  presentation String
+  unit         String
+  currentStock Int
+  minimumStock Int
+  stockDeficit Int
+  snapshotDate DateTime @default(now())
+
+  prices PriceHistory[]
+
+  @@map("product_snapshots")
+}
+
+model PriceHistory {
+  id              String   @id @default(uuid())
+  productId       String
+  distributorId   String
+  distributorName String
+  unitPrice       Float
+  packPrice       Float
+  packQuantity    Int
+  available       Boolean
+  checkedAt       DateTime @default(now())
+  url             String?
+
+  product ProductSnapshot @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("price_history")
+}
+
+model OrderGuide {
+  id          String      @id @default(uuid())
+  generatedAt DateTime    @default(now())
+  grandTotal  Float
+  status      GuideStatus @default(PENDING)
+
+  orders OrderItem[]
+
+  @@map("order_guides")
+}
+
+model OrderItem {
+  id              String      @id @default(uuid())
+  guideId         String
+  productId       String
+  productCode     String
+  productName     String
+  genericName     String
+  presentation    String
+  distributorId   String
+  distributorName String
+  quantityToOrder Int
+  unitPrice       Float
+  totalPrice      Float
+  status          OrderStatus @default(PENDING)
+
+  guide OrderGuide @relation(fields: [guideId], references: [id], onDelete: Cascade)
+
+  @@map("order_items")
+}
+
+model Distributor {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  platform  String
+  baseUrl   String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@map("distributors")
+}
+
+enum GuideStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+}

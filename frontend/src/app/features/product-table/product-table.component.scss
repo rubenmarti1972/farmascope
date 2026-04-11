@@ -1,0 +1,131 @@
+.table-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #333;
+  mat-icon { color: #1976d2; }
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: #999;
+}
+
+.reports-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.report-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  border-left: 5px solid #ccc;
+  overflow: hidden;
+  transition: box-shadow 0.2s, border-color 0.2s;
+
+  &:hover { box-shadow: 0 3px 12px rgba(0,0,0,0.12); }
+  &.stock-empty { border-left-color: #c62828; }
+  &.stock-critical { border-left-color: #e65100; }
+  &.stock-low { border-left-color: #f9a825; }
+  &.selected { background: #f0f7ff; box-shadow: 0 2px 8px rgba(25,118,210,0.15); }
+}
+
+.report-summary {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+}
+
+.select-checkbox {
+  flex-shrink: 0;
+}
+
+.product-info {
+  cursor: pointer;
+}
+
+.product-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #212121;
+}
+
+.product-meta {
+  font-size: 0.78rem;
+  color: #757575;
+  margin-top: 4px;
+  .separator { margin: 0 6px; }
+}
+
+.stock-info {
+  text-align: center;
+  min-width: 120px;
+  cursor: pointer;
+}
+
+.stock-numbers {
+  font-size: 1.1rem;
+  font-weight: 600;
+  .stock-current { color: #c62828; }
+  .stock-slash { color: #999; margin: 0 4px; }
+  .stock-min { color: #555; }
+  .stock-unit { font-size: 0.75rem; color: #999; margin-left: 4px; }
+}
+
+.stock-badge {
+  margin-top: 6px;
+  mat-chip { font-size: 0.72rem; }
+  mat-icon { font-size: 14px; width: 14px; height: 14px; margin-right: 4px; }
+  .chip-empty { background: #ffebee; color: #c62828; }
+  .chip-low { background: #fff8e1; color: #e65100; }
+}
+
+.order-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  .qty-field { width: 90px; }
+  .dist-field { width: 220px; }
+
+  mat-form-field {
+    margin-bottom: -1.25em;
+  }
+}
+
+.best-offer-preview {
+  text-align: right;
+  min-width: 140px;
+  cursor: pointer;
+
+  .offer-label { font-size: 0.72rem; color: #999; text-transform: uppercase; }
+  .offer-distributor { font-size: 0.85rem; font-weight: 500; color: #333; }
+  .offer-price { font-size: 1.1rem; font-weight: 700; color: #2e7d32; }
+
+  .chip-unavailable {
+    background: #f3f3f3;
+    color: #999;
+    font-size: 0.72rem;
+    mat-icon { font-size: 14px; width: 14px; height: 14px; margin-right: 4px; }
+  }
+}
+
+.report-detail {
+  border-top: 1px solid #f0f0f0;
+  padding: 20px;
+  background: #fafafa;
+}

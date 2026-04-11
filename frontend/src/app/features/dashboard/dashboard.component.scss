@@ -1,0 +1,156 @@
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 12px;
+
+  .toolbar-icon {
+    margin-right: 8px;
+  }
+
+  .toolbar-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .spinner-inline {
+    display: inline-block;
+    margin-right: 6px;
+  }
+}
+
+.page-content {
+  padding-top: 32px;
+  padding-bottom: 48px;
+}
+
+.loading-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 80px 0;
+  color: #666;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  mat-card-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px !important;
+  }
+
+  mat-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    padding: 8px;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stat-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.78rem;
+    color: #555;
+    margin-top: 4px;
+  }
+
+  &.stat-warning mat-icon {
+    background: #fff3cd;
+    color: #e65100;
+  }
+
+  &.stat-success mat-icon {
+    background: #d4edda;
+    color: #2e7d32;
+  }
+
+  &.stat-error mat-icon {
+    background: #f8d7da;
+    color: #c62828;
+  }
+
+  &.stat-info mat-icon {
+    background: #d1ecf1;
+    color: #0277bd;
+  }
+}
+
+.empty-state {
+  mat-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px !important;
+    color: #999;
+    gap: 12px;
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+    }
+  }
+}
+
+.guide-btn {
+  margin-right: 12px;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+
+  .search-field {
+    flex: 1;
+    min-width: 260px;
+  }
+
+  .sort-field {
+    width: 260px;
+  }
+
+  .search-results {
+    font-size: 0.82rem;
+    color: #666;
+    white-space: nowrap;
+  }
+}
+
+.paginator {
+  margin-top: 16px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
