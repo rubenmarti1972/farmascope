@@ -1,136 +1,188 @@
-<mat-toolbar color="primary" class="toolbar">
-  <mat-icon class="toolbar-icon">local_pharmacy</mat-icon>
-  <span class="toolbar-title">FarmaScope — Comparador de Precios Farmacéuticos</span>
-  <span class="spacer"></span>
+<!-- Top Navigation Bar -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="brand-logo">
+      <mat-icon>medication</mat-icon>
+    </div>
+    <div class="brand-text">
+      <span class="brand-name">FarmaScope</span>
+      <span class="brand-tagline">Comparador de Precios</span>
+    </div>
+  </div>
 
-  @if (selectedProducts().length > 0) {
-    <button mat-flat-button color="accent" class="guide-btn" (click)="navigateToGuide()">
-      <mat-icon>shopping_cart</mat-icon>
-      Generar Guía ({{ selectedProducts().length }})
-    </button>
-  }
+  <nav class="topbar-nav">
+    <span class="nav-item active">
+      <mat-icon>dashboard</mat-icon>
+      Inventario
+    </span>
+  </nav>
 
-  <button mat-stroked-button [disabled]="refreshing()" (click)="triggerRefresh()">
-    @if (refreshing()) {
-      <mat-spinner diameter="18" class="spinner-inline" />
-    } @else {
-      <mat-icon>refresh</mat-icon>
+  <div class="topbar-actions">
+    @if (selectedProducts().length > 0) {
+      <button mat-flat-button class="btn-cart" (click)="navigateToGuide()">
+        <mat-icon>shopping_cart</mat-icon>
+        Generar Guía
+        <span class="cart-badge">{{ selectedProducts().length }}</span>
+      </button>
     }
-    Actualizar Ahora
-  </button>
-</mat-toolbar>
 
-<div class="container page-content">
-
-  @if (loading()) {
-    <div class="loading-center">
-      <mat-spinner />
-      <p>Cargando reporte de inventario...</p>
-    </div>
-  } @else if (report(); as r) {
-
-    <!-- KPI cards -->
-    <div class="stats-grid">
-      <mat-card class="stat-card stat-warning">
-        <mat-card-content>
-          <mat-icon>warning</mat-icon>
-          <div class="stat-info">
-            <span class="stat-value">{{ r.pagination?.total ?? r.totalLowStockProducts }}</span>
-            <span class="stat-label">Productos bajo mínimo</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card class="stat-card stat-success">
-        <mat-card-content>
-          <mat-icon>check_circle</mat-icon>
-          <div class="stat-info">
-            <span class="stat-value">{{ r.productsWithOffers }}</span>
-            <span class="stat-label">Con mejor oferta encontrada</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card class="stat-card stat-error">
-        <mat-card-content>
-          <mat-icon>block</mat-icon>
-          <div class="stat-info">
-            <span class="stat-value">{{ r.productsWithoutOffers }}</span>
-            <span class="stat-label">Sin disponibilidad</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card class="stat-card stat-info">
-        <mat-card-content>
-          <mat-icon>schedule</mat-icon>
-          <div class="stat-info">
-            <span class="stat-value">{{ r.lastRunAt | date:'dd/MM HH:mm' }}</span>
-            <span class="stat-label">Última actualización</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-
-    <!-- Search & Sort toolbar -->
-    <div class="filter-bar">
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Buscar producto</mat-label>
-        <mat-icon matPrefix>search</mat-icon>
-        <input
-          matInput
-          [ngModel]="searchTerm"
-          (ngModelChange)="onSearch($event)"
-          placeholder="Nombre, genérico, código, laboratorio..."
-        />
-        @if (searchTerm) {
-          <button matSuffix mat-icon-button (click)="onSearch('')">
-            <mat-icon>close</mat-icon>
-          </button>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="sort-field">
-        <mat-label>Ordenar por</mat-label>
-        <mat-select [(ngModel)]="sortBy" (ngModelChange)="onSortChange()">
-          <mat-option value="deficit">Mayor déficit (críticos primero)</mat-option>
-          <mat-option value="stock">Menor stock</mat-option>
-          <mat-option value="name">Nombre A-Z</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      @if (searchTerm) {
-        <span class="search-results">
-          {{ r.pagination?.total ?? 0 }} resultado(s) para "{{ searchTerm }}"
-        </span>
+    <button mat-stroked-button class="btn-refresh" [disabled]="refreshing()" (click)="triggerRefresh()">
+      @if (refreshing()) {
+        <mat-spinner diameter="16" class="spinner-inline" />
+      } @else {
+        <mat-icon>sync</mat-icon>
       }
-    </div>
+      Actualizar
+    </button>
+  </div>
+</header>
 
-    <app-product-table
-      [reports]="r.reports"
-      [selectedProducts]="selectedProducts()"
-      (productSelectionChange)="onProductSelected($event.selected, $event.report)"
-    />
+<main class="page-main">
+  <div class="container">
 
-    <!-- Paginator -->
-    @if (r.pagination && r.pagination.total > pageSize) {
-      <mat-paginator
-        [length]="r.pagination.total"
-        [pageSize]="pageSize"
-        [pageIndex]="currentPage - 1"
-        [pageSizeOptions]="[25, 50, 100]"
-        showFirstLastButtons
-        (page)="onPageChange($event)"
-        class="paginator"
+    @if (loading()) {
+      <div class="loading-state">
+        <div class="loading-card">
+          <mat-spinner diameter="40" />
+          <div class="loading-text">
+            <p class="loading-title">Cargando inventario</p>
+            <p class="loading-sub">Analizando precios de distribuidores...</p>
+          </div>
+        </div>
+      </div>
+
+    } @else if (report(); as r) {
+
+      <!-- Page header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Panel de Inventario</h1>
+          <p class="page-subtitle">
+            Reporte generado el {{ r.lastRunAt | date:"EEEE d 'de' MMMM, HH:mm" : '' : 'es' }}
+          </p>
+        </div>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card kpi-warning">
+          <div class="kpi-icon-wrap">
+            <mat-icon>inventory_2</mat-icon>
+          </div>
+          <div class="kpi-body">
+            <span class="kpi-value">{{ r.pagination?.total ?? r.totalLowStockProducts }}</span>
+            <span class="kpi-label">Productos bajo mínimo</span>
+          </div>
+          <div class="kpi-bar"></div>
+        </div>
+
+        <div class="kpi-card kpi-success">
+          <div class="kpi-icon-wrap">
+            <mat-icon>price_check</mat-icon>
+          </div>
+          <div class="kpi-body">
+            <span class="kpi-value">{{ r.productsWithOffers }}</span>
+            <span class="kpi-label">Con oferta disponible</span>
+          </div>
+          <div class="kpi-bar"></div>
+        </div>
+
+        <div class="kpi-card kpi-danger">
+          <div class="kpi-icon-wrap">
+            <mat-icon>remove_shopping_cart</mat-icon>
+          </div>
+          <div class="kpi-body">
+            <span class="kpi-value">{{ r.productsWithoutOffers }}</span>
+            <span class="kpi-label">Sin disponibilidad</span>
+          </div>
+          <div class="kpi-bar"></div>
+        </div>
+
+        <div class="kpi-card kpi-info">
+          <div class="kpi-icon-wrap">
+            <mat-icon>query_stats</mat-icon>
+          </div>
+          <div class="kpi-body">
+            <span class="kpi-value">
+              {{ r.productsWithOffers > 0
+                  ? ((r.productsWithOffers / (r.pagination?.total ?? r.totalLowStockProducts)) * 100 | number:'1.0-0')
+                  : 0 }}%
+            </span>
+            <span class="kpi-label">Cobertura de ofertas</span>
+          </div>
+          <div class="kpi-bar"></div>
+        </div>
+      </div>
+
+      <!-- Toolbar de filtros -->
+      <div class="filters-panel">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-icon matPrefix class="search-icon">search</mat-icon>
+          <input
+            matInput
+            [ngModel]="searchTerm"
+            (ngModelChange)="onSearch($event)"
+            placeholder="Buscar por nombre, genérico, código o laboratorio..."
+          />
+          @if (searchTerm) {
+            <button matSuffix mat-icon-button (click)="onSearch('')" class="clear-btn">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="sort-field">
+          <mat-icon matPrefix>sort</mat-icon>
+          <mat-label>Ordenar</mat-label>
+          <mat-select [(ngModel)]="sortBy" (ngModelChange)="onSortChange()">
+            <mat-option value="deficit">Mayor déficit primero</mat-option>
+            <mat-option value="stock">Menor stock primero</mat-option>
+            <mat-option value="name">Nombre A → Z</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        @if (searchTerm) {
+          <div class="results-badge">
+            <mat-icon>filter_list</mat-icon>
+            {{ r.pagination?.total ?? 0 }} resultado(s)
+          </div>
+        }
+      </div>
+
+      <!-- Product table -->
+      <app-product-table
+        [reports]="r.reports"
+        [selectedProducts]="selectedProducts()"
+        (productSelectionChange)="onProductSelected($event.selected, $event.report)"
       />
+
+      <!-- Pagination -->
+      @if (r.pagination && r.pagination.total > pageSize) {
+        <div class="paginator-wrap">
+          <mat-paginator
+            [length]="r.pagination.total"
+            [pageSize]="pageSize"
+            [pageIndex]="currentPage - 1"
+            [pageSizeOptions]="[25, 50, 100]"
+            showFirstLastButtons
+            (page)="onPageChange($event)"
+          />
+        </div>
+      }
+
+    } @else {
+      <div class="empty-state">
+        <div class="empty-icon">
+          <mat-icon>medication</mat-icon>
+        </div>
+        <h2>No hay datos disponibles</h2>
+        <p>Haz clic en "Actualizar" para cargar el reporte de inventario.</p>
+        <button mat-flat-button color="primary" (click)="triggerRefresh()">
+          <mat-icon>sync</mat-icon>
+          Cargar ahora
+        </button>
+      </div>
     }
 
-  } @else {
-    <mat-card class="empty-state">
-      <mat-card-content>
-        <mat-icon>inventory_2</mat-icon>
-        <p>No hay datos disponibles. Haz clic en "Actualizar Ahora".</p>
-      </mat-card-content>
-    </mat-card>
-  }
-</div>
+  </div>
+</main>

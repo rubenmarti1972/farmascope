@@ -1,16 +1,25 @@
 <div class="table-header">
-  <h2 class="section-title">
-    <mat-icon>inventory</mat-icon>
-    Productos bajo stock mínimo
-  </h2>
-  <span class="hint">Selecciona los productos para generar una guía de pedido</span>
+  <div class="header-left">
+    <h2 class="section-title">Productos bajo stock mínimo</h2>
+    <span class="section-hint">Selecciona los productos que deseas incluir en la guía de pedido</span>
+  </div>
+  @if (reports().length > 0) {
+    <div class="header-legend">
+      <span class="legend-item legend-empty"><span class="dot"></span>Sin stock</span>
+      <span class="legend-item legend-critical"><span class="dot"></span>Crítico</span>
+      <span class="legend-item legend-low"><span class="dot"></span>Stock bajo</span>
+    </div>
+  }
 </div>
 
 <div class="reports-list">
   @for (report of reports(); track report.product.id) {
     <div class="report-card" [class]="getStockClass(report)" [class.selected]="isSelected(report)">
 
+      <div class="card-accent"></div>
+
       <div class="report-summary">
+
         <mat-checkbox
           [checked]="isSelected(report)"
           [disabled]="!report.bestOffer"
@@ -21,26 +30,35 @@
         <div class="product-info" (click)="toggleExpand(report)">
           <div class="product-name">{{ report.product.name }}</div>
           <div class="product-meta">
-            <span>{{ report.product.laboratory }}</span>
-            <span class="separator">·</span>
-            <span>{{ report.product.genericName }}</span>
-            <span class="separator">·</span>
-            <span>{{ report.product.presentation }}</span>
+            <span class="meta-tag">{{ report.product.genericName }}</span>
+            <span class="meta-sep">·</span>
+            <span class="meta-tag">{{ report.product.laboratory }}</span>
+            <span class="meta-sep">·</span>
+            <span class="meta-tag">{{ report.product.presentation }}</span>
           </div>
         </div>
 
-        <div class="stock-info" (click)="toggleExpand(report)">
-          <div class="stock-numbers">
-            <span class="stock-current" [matTooltip]="'Stock actual'">{{ report.product.currentStock }}</span>
-            <span class="stock-slash">/</span>
-            <span class="stock-min" [matTooltip]="'Stock mínimo'">{{ report.product.minimumStock }}</span>
-            <span class="stock-unit">{{ report.product.unit }}</span>
+        <div class="stock-cell" (click)="toggleExpand(report)">
+          <div class="stock-row">
+            <div class="stock-block">
+              <span class="stock-num current">{{ report.product.currentStock }}</span>
+              <span class="stock-unit-label">actual</span>
+            </div>
+            <div class="stock-divider"></div>
+            <div class="stock-block">
+              <span class="stock-num min">{{ report.product.minimumStock }}</span>
+              <span class="stock-unit-label">mínimo</span>
+            </div>
           </div>
-          <div class="stock-badge">
+          <div class="stock-chip-wrap">
             @if (report.product.currentStock === 0) {
-              <mat-chip class="chip-empty"><mat-icon>block</mat-icon> Sin stock</mat-chip>
+              <span class="status-chip chip-empty">
+                <mat-icon>block</mat-icon> Sin stock
+              </span>
             } @else {
-              <mat-chip class="chip-low"><mat-icon>warning</mat-icon> Stock bajo</mat-chip>
+              <span class="status-chip chip-low">
+                <mat-icon>warning_amber</mat-icon> Stock bajo
+              </span>
             }
           </div>
         </div>
@@ -48,7 +66,7 @@
         @if (isSelected(report)) {
           <div class="order-controls" (click)="$event.stopPropagation()">
             <mat-form-field appearance="outline" class="qty-field">
-              <mat-label>Cantidad</mat-label>
+              <mat-label>Cant.</mat-label>
               <input
                 matInput
                 type="number"
@@ -73,20 +91,23 @@
             </mat-form-field>
           </div>
         } @else {
-          <div class="best-offer-preview" (click)="toggleExpand(report)">
+          <div class="offer-cell" (click)="toggleExpand(report)">
             @if (report.bestOffer) {
-              <div class="offer-label">Mejor oferta</div>
               <div class="offer-distributor">{{ report.bestOffer.distributorName }}</div>
-              <div class="offer-price">{{ formatPrice(report.bestOffer.unitPrice) }} / ud.</div>
+              <div class="offer-price">{{ formatPrice(report.bestOffer.unitPrice) }}</div>
+              <div class="offer-sub">por unidad</div>
             } @else {
-              <mat-chip class="chip-unavailable"><mat-icon>search_off</mat-icon> Sin oferta</mat-chip>
+              <span class="status-chip chip-unavailable">
+                <mat-icon>search_off</mat-icon> Sin oferta
+              </span>
             }
           </div>
         }
 
-        <button mat-icon-button (click)="toggleExpand(report)">
+        <button class="expand-btn" mat-icon-button (click)="toggleExpand(report)" [matTooltip]="expandedReport() === report ? 'Cerrar' : 'Ver precios'">
           <mat-icon>{{ expandedReport() === report ? 'expand_less' : 'expand_more' }}</mat-icon>
         </button>
+
       </div>
 
       @if (expandedReport() === report) {

@@ -1,18 +1,67 @@
+:root {
+  --fs-primary:       #1565C0;
+  --fs-primary-dark:  #0D47A1;
+  --fs-accent:        #00897B;
+  --fs-accent-light:  #E0F2F1;
+  --fs-bg:            #F0F4F8;
+  --fs-surface:       #FFFFFF;
+  --fs-border:        #E2E8F0;
+  --fs-text:          #1A202C;
+  --fs-text-muted:    #718096;
+  --fs-success:       #276749;
+  --fs-success-bg:    #C6F6D5;
+  --fs-warning:       #C05621;
+  --fs-warning-bg:    #FEEBC8;
+  --fs-danger:        #C53030;
+  --fs-danger-bg:     #FED7D7;
+  --fs-info:          #2B6CB0;
+  --fs-info-bg:       #BEE3F8;
+  --fs-shadow-sm:     0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --fs-shadow-md:     0 4px 12px rgba(0,0,0,.10), 0 2px 4px rgba(0,0,0,.06);
+  --fs-shadow-lg:     0 10px 25px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+  --fs-radius:        10px;
+  --fs-radius-sm:     6px;
+  --fs-radius-lg:     14px;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html,
-body {
+html, body {
   height: 100%;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
-  background: #f5f7fa;
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  background: var(--fs-bg);
+  color: var(--fs-text);
+  -webkit-font-smoothing: antialiased;
 }
 
 .container {
-  max-width: 1400px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 32px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #CBD5E0; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #A0AEC0; }
+
+/* Material overrides */
+.mat-mdc-card {
+  border-radius: var(--fs-radius) !important;
+  box-shadow: var(--fs-shadow-sm) !important;
+}
+
+.mat-mdc-raised-button.mat-primary {
+  background: var(--fs-primary) !important;
+}
+
+.mdc-text-field--outlined .mdc-notched-outline__leading,
+.mdc-text-field--outlined .mdc-notched-outline__notch,
+.mdc-text-field--outlined .mdc-notched-outline__trailing {
+  border-color: var(--fs-border) !important;
 }
