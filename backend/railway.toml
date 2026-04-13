@@ -5,5 +5,5 @@ buildCommand = "npm install -g pnpm && pnpm install && pnpm run build"
 [deploy]
 startCommand = "node dist/index.js"
 healthcheckPath = "/api/report/status"
-healthcheckTimeout = 30
+healthcheckTimeout = 60
 restartPolicyType = "on_failure"
