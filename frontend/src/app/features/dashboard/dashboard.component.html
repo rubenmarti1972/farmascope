@@ -173,13 +173,13 @@
     } @else {
       <div class="empty-state">
         <div class="empty-icon">
-          <mat-icon>medication</mat-icon>
+          <mat-icon>cloud_off</mat-icon>
         </div>
-        <h2>No hay datos disponibles</h2>
-        <p>Haz clic en "Actualizar" para cargar el reporte de inventario.</p>
-        <button mat-flat-button color="primary" (click)="triggerRefresh()">
-          <mat-icon>sync</mat-icon>
-          Cargar ahora
+        <h2>Sin conexión al servidor</h2>
+        <p>No se pudo cargar el reporte. Verifica que el servidor esté activo.</p>
+        <button mat-flat-button color="primary" (click)="loadReport()">
+          <mat-icon>refresh</mat-icon>
+          Reintentar
         </button>
       </div>
     }

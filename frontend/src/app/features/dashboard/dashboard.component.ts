@@ -14,7 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, timeout } from 'rxjs/operators';
 import { ReportSummary, ProductReport, SelectedProduct } from '../../core/models/product.model';
 import { InventoryService } from '../../core/services/inventory.service';
 import { ProductTableComponent } from '../product-table/product-table.component';
@@ -72,6 +72,7 @@ export class DashboardComponent implements OnInit {
     this.loading.set(true);
     this.inventoryService
       .getReport({ page: this.currentPage, pageSize: this.pageSize, search: this.searchTerm, sort: this.sortBy })
+      .pipe(timeout(15000))
       .subscribe({
         next: (data) => {
           this.report.set(data);
@@ -79,7 +80,8 @@ export class DashboardComponent implements OnInit {
         },
         error: () => {
           this.loading.set(false);
-          this.snackBar.open('Error cargando el reporte', 'Cerrar', { duration: 3000 });
+          this.snackBar.open('No se pudo conectar al servidor. Intenta nuevamente.', 'Reintentar', { duration: 6000 })
+            .onAction().subscribe(() => this.loadReport());
         },
       });
   }
