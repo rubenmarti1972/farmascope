@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ReportSummary, ReportStatus, PreOrderItem, OrderGuide, PreOrder } from '../models/product.model';
 
-const API_BASE = 'http://localhost:3000/api';
+const API_BASE = 'https://farmascope-production.up.railway.app/api';
 
 @Injectable({ providedIn: 'root' })
 export class InventoryService {
