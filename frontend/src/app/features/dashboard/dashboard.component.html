@@ -66,9 +66,7 @@
       <!-- KPI Cards -->
       <div class="kpi-grid">
         <div class="kpi-card kpi-warning">
-          <div class="kpi-icon-wrap">
-            <mat-icon>inventory_2</mat-icon>
-          </div>
+          <div class="kpi-icon-wrap">⚠️</div>
           <div class="kpi-body">
             <span class="kpi-value">{{ r.pagination?.total ?? r.totalLowStockProducts }}</span>
             <span class="kpi-label">Productos bajo mínimo</span>
@@ -77,9 +75,7 @@
         </div>
 
         <div class="kpi-card kpi-success">
-          <div class="kpi-icon-wrap">
-            <mat-icon>price_check</mat-icon>
-          </div>
+          <div class="kpi-icon-wrap">✅</div>
           <div class="kpi-body">
             <span class="kpi-value">{{ r.productsWithOffers }}</span>
             <span class="kpi-label">Con oferta disponible</span>
@@ -88,9 +84,7 @@
         </div>
 
         <div class="kpi-card kpi-danger">
-          <div class="kpi-icon-wrap">
-            <mat-icon>remove_shopping_cart</mat-icon>
-          </div>
+          <div class="kpi-icon-wrap">🚫</div>
           <div class="kpi-body">
             <span class="kpi-value">{{ r.productsWithoutOffers }}</span>
             <span class="kpi-label">Sin disponibilidad</span>
@@ -99,9 +93,7 @@
         </div>
 
         <div class="kpi-card kpi-info">
-          <div class="kpi-icon-wrap">
-            <mat-icon>query_stats</mat-icon>
-          </div>
+          <div class="kpi-icon-wrap">📊</div>
           <div class="kpi-body">
             <span class="kpi-value">
               {{ r.productsWithOffers > 0
