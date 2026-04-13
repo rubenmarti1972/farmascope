@@ -13,7 +13,7 @@ const app = express();
 const PORT = process.env.PORT ?? 3000;
 
 app.use(helmet());
-app.use(cors({ origin: 'http://localhost:4200' }));
+app.use(cors({ origin: ['http://localhost:4200', 'https://farmscope.netlify.app'] }));
 app.use(express.json());
 
 const store = new ReportStore();
